@@ -42,7 +42,7 @@ namespace ActivityStorer
             table.AddData("Commit", commitInput.Text);
 
             var path = AppDomain.CurrentDomain.BaseDirectory;
-            var fullFileName = Path.Combine(path, date.ToString("yyyy"), date.ToString("MM"));
+            var fullFileName = Path.Combine(path, "Activity 1.0.0", date.ToString("yyyy"), date.ToString("MM"));
 
             if (!Directory.Exists(fullFileName))
             {

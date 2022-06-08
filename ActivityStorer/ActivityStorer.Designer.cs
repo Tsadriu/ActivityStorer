@@ -48,7 +48,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.saveButton);
             this.Name = "ActivityStorer";
-            this.Text = "ActivityStorer";
+            this.Text = "Activity Storer 1.0.0";
             this.ResumeLayout(false);
 
         }
