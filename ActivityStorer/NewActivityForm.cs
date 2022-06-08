@@ -35,7 +35,7 @@ namespace ActivityStorer
             table.AddColumn("Activity start", "Activity end", "Description", "Co-workers", "Ticket", "Branch", "Commit");
             table.AddData("Activity start", activityStartInput.Value.ToString("HH:mm"));
             table.AddData("Activity end", activityEndInput.Value.ToString("HH:mm"));
-            table.AddData("Description", descriptionInput.Text);
+            table.AddData("Description", descriptionInput.Text.Replace(Environment.NewLine, " "));
             table.AddData("Co-workers", string.Join("|", coworkerInput.CheckedItems.OfType<string>().ToList()));
             table.AddData("Ticket", ticketInput.Text.Remove("Ticket"));
             table.AddData("Branch", branchInput.Text);

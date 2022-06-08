@@ -98,6 +98,7 @@
             // 
             // coworkerInput
             // 
+            this.coworkerInput.CheckOnClick = true;
             this.coworkerInput.FormattingEnabled = true;
             this.coworkerInput.Items.AddRange(new object[] {
             "Ardizzone Lorenzo",
