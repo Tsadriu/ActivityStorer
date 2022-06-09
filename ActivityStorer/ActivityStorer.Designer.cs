@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.saveButton = new System.Windows.Forms.Button();
+            this.viewActivityButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // saveButton
@@ -41,11 +42,22 @@
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.button1_Click);
             // 
+            // viewActivityButton
+            // 
+            this.viewActivityButton.Location = new System.Drawing.Point(330, 73);
+            this.viewActivityButton.Name = "viewActivityButton";
+            this.viewActivityButton.Size = new System.Drawing.Size(110, 23);
+            this.viewActivityButton.TabIndex = 1;
+            this.viewActivityButton.Text = "View activity";
+            this.viewActivityButton.UseVisualStyleBackColor = true;
+            this.viewActivityButton.Click += new System.EventHandler(this.viewActivityButton_Click);
+            // 
             // ActivityStorer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.viewActivityButton);
             this.Controls.Add(this.saveButton);
             this.Name = "ActivityStorer";
             this.Text = "Activity Storer 1.0.0";
@@ -56,5 +68,6 @@
         #endregion
 
         private Button saveButton;
+        private Button viewActivityButton;
     }
 }

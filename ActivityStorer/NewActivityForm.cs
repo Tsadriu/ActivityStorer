@@ -25,31 +25,30 @@ namespace ActivityStorer
             if (descriptionInput.Text.IsEmpty() || coworkerInput.CheckedItems.Count == 0)
             {
                 fileStateResult.ForeColor = Color.Red;
-                fileStateResult.Text = descriptionInput.Text.IsEmpty() ? "Description required." : "Req. at least 1 co-worker.";
+                fileStateResult.Text = descriptionInput.Text.IsEmpty() ? "Description\nrequired." : "Req. at least\n1 co-worker.";
                 fileStateResult.Show();
                 return;
             }
             var date = dateInput.Value;
             var table = new TTable();
-
             table.AddColumn("Activity start", "Activity end", "Description", "Co-workers", "Ticket", "Branch", "Commit");
             table.AddData("Activity start", activityStartInput.Value.ToString("HH:mm"));
             table.AddData("Activity end", activityEndInput.Value.ToString("HH:mm"));
-            table.AddData("Description", descriptionInput.Text.Replace(Environment.NewLine, " "));
+            table.AddData("Description", descriptionInput.Text.Replace(Environment.NewLine, "<newLine>"));
             table.AddData("Co-workers", string.Join("|", coworkerInput.CheckedItems.OfType<string>().ToList()));
             table.AddData("Ticket", ticketInput.Text.Remove("Ticket"));
             table.AddData("Branch", branchInput.Text);
             table.AddData("Commit", commitInput.Text);
 
             var path = AppDomain.CurrentDomain.BaseDirectory;
-            var fullFileName = Path.Combine(path, "Activity 1.0.0", date.ToString("yyyy"), date.ToString("MM"));
+            var fullFileName = Path.Combine(path, "Activity " + ActivityStorer.GetVersionAsString(), date.ToString("yyyy"), date.ToString("MM"));
 
             if (!Directory.Exists(fullFileName))
             {
                 Directory.CreateDirectory(fullFileName);
             }
 
-            fullFileName = Path.Combine(fullFileName, date.ToString("dd") + ".csv");
+            fullFileName = Path.Combine(fullFileName, date.ToString("yyyy-MM-dd") + ".csv");
 
             var csvContent = table.TableToCsv();
 
