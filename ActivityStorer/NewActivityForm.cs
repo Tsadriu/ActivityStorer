@@ -16,8 +16,10 @@ namespace ActivityStorer
         public NewActivityForm()
         {
             InitializeComponent();
+            CenterToParent();
+            Text = "Activity Storer " + ActivityStorer.GetVersionAsString() + " - Register new acvitity";
             fileStateResult.Hide();
-            // Data;Ore;Minuti;Ore Svolte;Ore Effettive Ticket;Attivita;Branch;Commit;Orario di registrazione
+            ActivityStorer.Instance.Hide();
         }
 
         private void saveButton_Click(object sender, EventArgs e)

@@ -23,9 +23,12 @@ namespace ActivityStorer
             currentFileContent = new List<string>();
             currentSelectedDate = DateTime.Today;
             InitializeComponent();
+            CenterToParent();
             GetUserFiles();
             SetupDateInput();
-            dateInput.SetDate(currentSelectedDate.AddDays(+1).AddDays(-1));
+            dateInput_DateChanged(this, new DateRangeEventArgs(DateTime.Today, DateTime.Today));
+            Text = $"Activity Storer {ActivityStorer.GetVersionAsString()} - View past activities";
+            ActivityStorer.Instance.Hide();
         }
 
         private void dateInput_DateChanged(object sender, DateRangeEventArgs e)
@@ -69,7 +72,12 @@ namespace ActivityStorer
 
         private void GetUserFiles()
         {
-            var fullFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Activity 1.0.0");
+            var fullFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Activity " + ActivityStorer.GetVersionAsString());
+
+            if (!Directory.Exists(fullFileName))
+            {
+                return;
+            }
 
             var yearFolders = Directory.GetDirectories(fullFileName);
             var temporaryFileList = new List<string>();
@@ -118,11 +126,6 @@ namespace ActivityStorer
                 coworkerInput.SetItemChecked(i, false);
             }
 
-            var path = AppDomain.CurrentDomain.BaseDirectory;
-            var selectedDate = dateInput.SelectionRange.Start;
-            var fullFileName = Path.Combine(path, "Activity " + ActivityStorer.GetVersionAsString(), selectedDate.ToString("yyyy"), selectedDate.ToString("MM"), selectedDate.ToString("yyyy-MM-dd") + ".csv");
-            var fileContent = new TTable();
-            fileContent.CsvToTable(fullFileName);
             var currentLine = currentFileContent[row].Split(";");
             activityStartInput.Value = currentLine[0].ToDateTime("HH:mm");
             activityEndInput.Value = currentLine[1].ToDateTime("HH:mm");
@@ -172,43 +175,25 @@ namespace ActivityStorer
                 fileStateResult.Show();
                 return;
             }
-            var table = new TTable();
-            table.AddColumn("Activity start", "Activity end", "Description", "Co-workers", "Ticket", "Branch", "Commit");
-            table.AddData("Activity start", activityStartInput.Value.ToString("HH:mm"));
-            table.AddData("Activity end", activityEndInput.Value.ToString("HH:mm"));
-            table.AddData("Description", descriptionInput.Text.Replace(Environment.NewLine, "<newLine>"));
-            table.AddData("Co-workers", string.Join("|", coworkerInput.CheckedItems.OfType<string>().ToList()));
-            table.AddData("Ticket", ticketInput.Text.Remove("Ticket"));
-            table.AddData("Branch", branchInput.Text);
-            table.AddData("Commit", commitInput.Text);
+            var userStart = activityStartInput.Value.ToString("HH:mm");
+            var userEnd = activityEndInput.Value.ToString("HH:mm");
+            var userDescription = descriptionInput.Text.Replace(Environment.NewLine, "<newLine>");
+            var userCoworkers = string.Join("|", coworkerInput.CheckedItems.OfType<string>().ToList());
+            var userTicket = ticketInput.Text;
+            var userBranch = branchInput.Text;
+            var userCommit = commitInput.Text;
+            var content = string.Join(";", userStart, userEnd, userDescription, userCoworkers, userTicket, userBranch, userCommit);
 
             var path = AppDomain.CurrentDomain.BaseDirectory;
             var fullFileName = Path.Combine(path, "Activity " + ActivityStorer.GetVersionAsString(), dateInput.SelectionRange.Start.ToString("yyyy"), dateInput.SelectionRange.Start.ToString("MM"), dateInput.SelectionRange.Start.ToString("yyyy-MM-dd") + ".csv");
+            currentFileContent[(int)rowInput.Value] = content;
 
-            var csvContent = table.TableToCsv();
-
-            if (File.Exists(fullFileName))
-            {
-                csvContent = table.TableToCsv(false);
-                File.AppendAllLines(fullFileName, csvContent);
-            }
-            else
-            {
-                File.Create(fullFileName).Close();
-                File.AppendAllLines(fullFileName, csvContent);
-            }
+            File.WriteAllLines(fullFileName, currentFileContent);
 
             fileStateResult.ForeColor = Color.Green;
             fileStateResult.Text = "Saved";
             fileStateResult.Show();
-        }
-
-        private TTable ListToTTable()
-        {
-            var list = new List<TTable>();
-
-            var currentLine = currentFileContent[(int)rowInput.Value].Split(";");
-
+            modifyButton_Click(this, new EventArgs());
         }
     }
 }
