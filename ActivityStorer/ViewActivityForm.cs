@@ -15,41 +15,29 @@ namespace ActivityStorer
     {
         private List<string> fileList;
         private List<string> currentFileContent;
-        private DateTime currentSelectedDate;
 
         public ViewActivityForm()
         {
             fileList = new List<string>();
             currentFileContent = new List<string>();
-            currentSelectedDate = DateTime.Today;
             InitializeComponent();
             CenterToParent();
             GetUserFiles();
             SetupDateInput();
             dateInput_DateChanged(this, new DateRangeEventArgs(DateTime.Today, DateTime.Today));
-            Text = $"Activity Storer {ActivityStorer.GetVersionAsString()} - View past activities";
-            ActivityStorer.Instance.Hide();
+            Text = $"Activity Storer {ActivityStorerLauncher.GetVersionAsString()} - View past activities";
+            ActivityStorerLauncher.Instance.Hide();
         }
 
         private void dateInput_DateChanged(object sender, DateRangeEventArgs e)
         {
-            currentSelectedDate = dateInput.SelectionRange.Start;
-            rowInput.Enabled = false;
-
-            var path = AppDomain.CurrentDomain.BaseDirectory;
-            var selectedDate = dateInput.SelectionRange.Start;
-            var fullFileName = Path.Combine(path, "Activity " + ActivityStorer.GetVersionAsString(), selectedDate.ToString("yyyy"), selectedDate.ToString("MM"));
-
-            if (!Directory.Exists(fullFileName))
-            {
-                modifyButton.Enabled = false;
-                return;
-            }
-
-            fullFileName = Path.Combine(fullFileName, selectedDate.ToString("yyyy-MM-dd") + ".csv");
+            DateTime selectedDate = dateInput.SelectionRange.Start;
+            string fullFileName = Path.Combine(Program.ActivityStorage, $"{selectedDate:yyyy\\\\MM}", $"{selectedDate:yyyy-MM-dd}.csv");
 
             if (!File.Exists(fullFileName))
             {
+                ResetParameters();
+                rowInput.Enabled = false;
                 modifyButton.Enabled = false;
                 return;
             }
@@ -66,13 +54,14 @@ namespace ActivityStorer
 
         private void rowInput_ValueChanged(object sender, EventArgs e)
         {
-            rowInput.Value = rowInput.Value.ClampValue(1, currentFileContent.Count - 1); // -1 for index
+            var max = currentFileContent.Count != 0 ? currentFileContent.Count - 1 : 0;
+            rowInput.Value = rowInput.Value.ClampValue(1, max); // -1 for index
             DisplayInfo((int)rowInput.Value);
         }
 
         private void GetUserFiles()
         {
-            var fullFileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Activity " + ActivityStorer.GetVersionAsString());
+            var fullFileName = Path.Combine(Program.ActivityStorage);
 
             if (!Directory.Exists(fullFileName))
             {
@@ -121,27 +110,30 @@ namespace ActivityStorer
         /// <param name="row">Row to display.</param>
         private void DisplayInfo(int row)
         {
-            for (int i = 0; i < coworkerInput.Items.Count; i++)
-            {
-                coworkerInput.SetItemChecked(i, false);
-            }
+            workerInput.Items.Clear();
 
             var currentLine = currentFileContent[row].Split(";");
             activityStartInput.Value = currentLine[0].ToDateTime("HH:mm");
             activityEndInput.Value = currentLine[1].ToDateTime("HH:mm");
-            descriptionInput.Text = currentLine[2].Replace("<newLine>", Environment.NewLine);
-            var coworkersInFile = currentLine[3].Split("|");
+            descriptionInput.Text = currentLine[2].Replace(Program.LineBreak, Environment.NewLine);
+            List<string> workersInFile;
 
-            for (int i = 0; i < coworkerInput.Items.Count; i++)
+            if (currentLine[3].IsEmpty())
             {
-                foreach (var coworker in coworkersInFile)
-                {
-                    if (coworkerInput.Items[i].Equals(coworker))
-                    {
-                        coworkerInput.SetItemChecked(i, true);
-                    }
-                }
+                workersInFile = new List<string>();
             }
+            else
+            {
+                workersInFile = currentLine[3].Split("|").ToList();
+            }
+
+            for (int i = 0; i < workersInFile.Count; i++)
+            {
+                string? worker = workersInFile[i];
+                workerInput.Items.Add(worker);
+                workerInput.SetItemChecked(i, true);
+            }
+
             ticketInput.Text = currentLine[4];
             branchInput.Text = currentLine[5];
             commitInput.Text = currentLine[6];
@@ -153,12 +145,14 @@ namespace ActivityStorer
             activityStartInput.Enabled = !activityStartInput.Enabled;
             activityEndInput.Enabled = !activityEndInput.Enabled;
             descriptionInput.ReadOnly = !descriptionInput.ReadOnly;
-            coworkerInput.Enabled = !coworkerInput.Enabled;
+            workerInput.Enabled = !workerInput.Enabled;
             ticketInput.ReadOnly = !ticketInput.ReadOnly;
             branchInput.ReadOnly = !branchInput.ReadOnly;
             commitInput.ReadOnly = !commitInput.ReadOnly;
             modifyButton.Text = activityStartInput.Enabled ? "Cancel" : "Modify";
             saveButton.Enabled = activityStartInput.Enabled;
+            workerToAddLabel.Visible = !workerToAddLabel.Visible;
+            workerToAddBox.Visible = !workerToAddBox.Visible;
 
             if (!activityStartInput.Enabled)
             {
@@ -168,24 +162,27 @@ namespace ActivityStorer
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            if (descriptionInput.Text.IsEmpty() || coworkerInput.CheckedItems.Count == 0)
+            if (descriptionInput.Text.IsEmpty() || (workerInput.CheckedItems.Count == 0 && workerToAddBox.Text.Split(Environment.NewLine).Length == 0))
             {
                 fileStateResult.ForeColor = Color.Red;
-                fileStateResult.Text = descriptionInput.Text.IsEmpty() ? "Description\nrequired." : "Req. at least\n1 co-worker.";
+                fileStateResult.Text = descriptionInput.Text.IsEmpty() ? "The description is required." : "Req. at least 1 co-worker.";
                 fileStateResult.Show();
                 return;
             }
-            var userStart = activityStartInput.Value.ToString("HH:mm");
-            var userEnd = activityEndInput.Value.ToString("HH:mm");
-            var userDescription = descriptionInput.Text.Replace(Environment.NewLine, "<newLine>");
-            var userCoworkers = string.Join("|", coworkerInput.CheckedItems.OfType<string>().ToList());
-            var userTicket = ticketInput.Text;
-            var userBranch = branchInput.Text;
-            var userCommit = commitInput.Text;
-            var content = string.Join(";", userStart, userEnd, userDescription, userCoworkers, userTicket, userBranch, userCommit);
+            string userStart = activityStartInput.Value.ToString("HH:mm");
+            string userEnd = activityEndInput.Value.ToString("HH:mm");
+            string userDescription = descriptionInput.Text.Replace(Environment.NewLine, Program.LineBreak);
+            var listOfWorkers = workerInput.CheckedItems.OfType<string>().ToList();
+            var listOfWorkersToAdd = workerToAddBox.Text.Split(Environment.NewLine).ToList();
 
-            var path = AppDomain.CurrentDomain.BaseDirectory;
-            var fullFileName = Path.Combine(path, "Activity " + ActivityStorer.GetVersionAsString(), dateInput.SelectionRange.Start.ToString("yyyy"), dateInput.SelectionRange.Start.ToString("MM"), dateInput.SelectionRange.Start.ToString("yyyy-MM-dd") + ".csv");
+            string userWorkers = string.Join("|", workerInput.CheckedItems.OfType<string>().ToList());
+            string userTicket = ticketInput.Text;
+            string userBranch = branchInput.Text;
+            string userCommit = commitInput.Text;
+            string content = string.Join(";", userStart, userEnd, userDescription, userWorkers, userTicket, userBranch, userCommit);
+
+            string fullFileName = Path.Combine(Program.ActivityStorage, $"{dateInput.SelectionRange.Start:yyyy\\\\MM}", $"{dateInput.SelectionRange.Start:yyyy-MM-dd}.csv");
+
             currentFileContent[(int)rowInput.Value] = content;
 
             File.WriteAllLines(fullFileName, currentFileContent);
@@ -194,6 +191,20 @@ namespace ActivityStorer
             fileStateResult.Text = "Saved";
             fileStateResult.Show();
             modifyButton_Click(this, new EventArgs());
+        }
+
+        private void ResetParameters()
+        {
+            rowInput.Value = 0;
+            activityStartInput.Value = DateTime.Today;
+            activityEndInput.Value = DateTime.Today;
+            descriptionInput.Text = string.Empty;
+            workerInput.Items.Clear();
+            ticketInput.Text = string.Empty;
+            branchInput.Text = string.Empty;
+            commitInput.Text = string.Empty;
+            modifyButton.Text = "Modify";
+            saveButton.Enabled = false;
         }
     }
 }

@@ -3,17 +3,16 @@ using TsadriuUtilities;
 
 namespace ActivityStorer
 {
-    public partial class ActivityStorer : Form
+    public partial class ActivityStorerLauncher : Form
     {
-        public static ActivityStorer Instance;
+        public static ActivityStorerLauncher Instance;
         private static VersionEnum currentVersion = VersionEnum.V1_0_0;
         private static string fileDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-        public ActivityStorer()
+        public ActivityStorerLauncher()
         {
             Instance = this;
             InitializeComponent();
-            CenterToScreen();
             Text = $"Activity Storer {GetVersionAsString()}";
         }
 

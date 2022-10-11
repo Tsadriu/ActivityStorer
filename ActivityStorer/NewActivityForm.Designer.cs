@@ -13,7 +13,7 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            ActivityStorer.Instance.Show();
+            Program.launcher.Show();
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -30,6 +30,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.commitInput = new System.Windows.Forms.TextBox();
             this.fileStateResult = new System.Windows.Forms.Label();
             this.fileStateLabel = new System.Windows.Forms.Label();
             this.coworkerInput = new System.Windows.Forms.CheckedListBox();
@@ -48,12 +49,12 @@
             this.activityStartLabel = new System.Windows.Forms.Label();
             this.dateInput = new System.Windows.Forms.DateTimePicker();
             this.dateLabel = new System.Windows.Forms.Label();
-            this.commitInput = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.commitInput);
             this.panel1.Controls.Add(this.fileStateResult);
             this.panel1.Controls.Add(this.fileStateLabel);
             this.panel1.Controls.Add(this.coworkerInput);
@@ -72,16 +73,24 @@
             this.panel1.Controls.Add(this.activityStartLabel);
             this.panel1.Controls.Add(this.dateInput);
             this.panel1.Controls.Add(this.dateLabel);
-            this.panel1.Location = new System.Drawing.Point(28, 21);
+            this.panel1.Location = new System.Drawing.Point(12, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(469, 377);
+            this.panel1.Size = new System.Drawing.Size(766, 406);
             this.panel1.TabIndex = 0;
+            // 
+            // commitInput
+            // 
+            this.commitInput.Location = new System.Drawing.Point(18, 343);
+            this.commitInput.Name = "commitInput";
+            this.commitInput.PlaceholderText = "7a4b6ed9bd37d9cd625a5e030645c8a15f75d94a";
+            this.commitInput.Size = new System.Drawing.Size(170, 23);
+            this.commitInput.TabIndex = 8;
             // 
             // fileStateResult
             // 
             this.fileStateResult.AutoSize = true;
             this.fileStateResult.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.fileStateResult.Location = new System.Drawing.Point(368, 343);
+            this.fileStateResult.Location = new System.Drawing.Point(163, 384);
             this.fileStateResult.Name = "fileStateResult";
             this.fileStateResult.Size = new System.Drawing.Size(38, 15);
             this.fileStateResult.TabIndex = 11;
@@ -91,7 +100,7 @@
             // 
             this.fileStateLabel.AutoSize = true;
             this.fileStateLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.fileStateLabel.Location = new System.Drawing.Point(296, 343);
+            this.fileStateLabel.Location = new System.Drawing.Point(97, 384);
             this.fileStateLabel.Name = "fileStateLabel";
             this.fileStateLabel.Size = new System.Drawing.Size(60, 15);
             this.fileStateLabel.TabIndex = 10;
@@ -109,16 +118,16 @@
             "Oliveira Fabio",
             "Scigliano Andrea",
             "Tochetti Alessio"});
-            this.coworkerInput.Location = new System.Drawing.Point(219, 203);
+            this.coworkerInput.Location = new System.Drawing.Point(215, 37);
             this.coworkerInput.Name = "coworkerInput";
-            this.coworkerInput.Size = new System.Drawing.Size(187, 130);
+            this.coworkerInput.Size = new System.Drawing.Size(187, 292);
             this.coworkerInput.TabIndex = 5;
             // 
             // coworkerLabel
             // 
             this.coworkerLabel.AutoSize = true;
             this.coworkerLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.coworkerLabel.Location = new System.Drawing.Point(219, 185);
+            this.coworkerLabel.Location = new System.Drawing.Point(215, 19);
             this.coworkerLabel.Name = "coworkerLabel";
             this.coworkerLabel.Size = new System.Drawing.Size(123, 15);
             this.coworkerLabel.TabIndex = 14;
@@ -126,7 +135,7 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(215, 339);
+            this.saveButton.Location = new System.Drawing.Point(16, 380);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 9;
@@ -138,7 +147,7 @@
             // 
             this.commitLabel.AutoSize = true;
             this.commitLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.commitLabel.Location = new System.Drawing.Point(18, 317);
+            this.commitLabel.Location = new System.Drawing.Point(16, 325);
             this.commitLabel.Name = "commitLabel";
             this.commitLabel.Size = new System.Drawing.Size(51, 15);
             this.commitLabel.TabIndex = 12;
@@ -146,17 +155,17 @@
             // 
             // branchInput
             // 
-            this.branchInput.Location = new System.Drawing.Point(18, 274);
+            this.branchInput.Location = new System.Drawing.Point(18, 291);
             this.branchInput.Name = "branchInput";
             this.branchInput.PlaceholderText = "Ticket_367";
-            this.branchInput.Size = new System.Drawing.Size(92, 23);
+            this.branchInput.Size = new System.Drawing.Size(170, 23);
             this.branchInput.TabIndex = 7;
             // 
             // branchLabel
             // 
             this.branchLabel.AutoSize = true;
             this.branchLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.branchLabel.Location = new System.Drawing.Point(18, 256);
+            this.branchLabel.Location = new System.Drawing.Point(18, 273);
             this.branchLabel.Name = "branchLabel";
             this.branchLabel.Size = new System.Drawing.Size(46, 15);
             this.branchLabel.TabIndex = 10;
@@ -164,7 +173,7 @@
             // 
             // ticketInput
             // 
-            this.ticketInput.Location = new System.Drawing.Point(18, 215);
+            this.ticketInput.Location = new System.Drawing.Point(16, 203);
             this.ticketInput.Name = "ticketInput";
             this.ticketInput.PlaceholderText = "367";
             this.ticketInput.Size = new System.Drawing.Size(92, 23);
@@ -174,7 +183,7 @@
             // 
             this.ticketLabel.AutoSize = true;
             this.ticketLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.ticketLabel.Location = new System.Drawing.Point(18, 197);
+            this.ticketLabel.Location = new System.Drawing.Point(18, 185);
             this.ticketLabel.Name = "ticketLabel";
             this.ticketLabel.Size = new System.Drawing.Size(42, 15);
             this.ticketLabel.TabIndex = 8;
@@ -182,19 +191,19 @@
             // 
             // descriptionInput
             // 
-            this.descriptionInput.Location = new System.Drawing.Point(219, 37);
+            this.descriptionInput.Location = new System.Drawing.Point(412, 37);
             this.descriptionInput.Multiline = true;
             this.descriptionInput.Name = "descriptionInput";
-            this.descriptionInput.PlaceholderText = "Portal Edyna uses a differ...";
+            this.descriptionInput.PlaceholderText = "Aggiornato metodo di Login del portale di Snam.";
             this.descriptionInput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.descriptionInput.Size = new System.Drawing.Size(187, 136);
+            this.descriptionInput.Size = new System.Drawing.Size(317, 292);
             this.descriptionInput.TabIndex = 3;
             // 
             // descriptionLabel
             // 
             this.descriptionLabel.AutoSize = true;
             this.descriptionLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.descriptionLabel.Location = new System.Drawing.Point(219, 19);
+            this.descriptionLabel.Location = new System.Drawing.Point(412, 19);
             this.descriptionLabel.Name = "descriptionLabel";
             this.descriptionLabel.Size = new System.Drawing.Size(71, 15);
             this.descriptionLabel.TabIndex = 6;
@@ -249,11 +258,11 @@
             this.dateInput.CustomFormat = "dd.MM.yyyy";
             this.dateInput.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dateInput.Location = new System.Drawing.Point(18, 37);
-            this.dateInput.MaxDate = DateTime.Today;
+            this.dateInput.MaxDate = new System.DateTime(2022, 10, 11, 0, 0, 0, 0);
             this.dateInput.Name = "dateInput";
             this.dateInput.Size = new System.Drawing.Size(92, 23);
             this.dateInput.TabIndex = 0;
-            this.dateInput.Value = DateTime.Today;
+            this.dateInput.Value = new System.DateTime(2022, 10, 11, 0, 0, 0, 0);
             // 
             // dateLabel
             // 
@@ -265,27 +274,17 @@
             this.dateLabel.TabIndex = 0;
             this.dateLabel.Text = "Date";
             // 
-            // commitInput
-            // 
-            this.commitInput.Location = new System.Drawing.Point(46, 356);
-            this.commitInput.Name = "commitInput";
-            this.commitInput.PlaceholderText = "7a4b6ed9bd37d9cd625a5e030645c8a15f75d94a";
-            this.commitInput.Size = new System.Drawing.Size(92, 23);
-            this.commitInput.TabIndex = 8;
-            // 
             // NewActivityForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(533, 430);
-            this.Controls.Add(this.commitInput);
+            this.ClientSize = new System.Drawing.Size(790, 430);
             this.Controls.Add(this.panel1);
             this.Name = "NewActivityForm";
             this.Text = "Add new activity";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

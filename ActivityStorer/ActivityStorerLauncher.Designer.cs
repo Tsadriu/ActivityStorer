@@ -1,6 +1,6 @@
 ﻿namespace ActivityStorer
 {
-    partial class ActivityStorer
+    partial class ActivityStorerLauncher
     {
         /// <summary>
         ///  Required designer variable.

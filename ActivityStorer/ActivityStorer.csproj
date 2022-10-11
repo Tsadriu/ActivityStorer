@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TsadriuUtilities" Version="1.2.0" />
+    <PackageReference Include="TsadriuUtilities" Version="1.9.0" />
   </ItemGroup>
 
 </Project>

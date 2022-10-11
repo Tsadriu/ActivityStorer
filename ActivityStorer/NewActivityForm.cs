@@ -17,9 +17,9 @@ namespace ActivityStorer
         {
             InitializeComponent();
             CenterToParent();
-            Text = "Activity Storer " + ActivityStorer.GetVersionAsString() + " - Register new acvitity";
-            fileStateResult.Hide();
-            ActivityStorer.Instance.Hide();
+            Text = "Activity Storer " + ActivityStorerLauncher.GetVersionAsString() + " - Register new acvitity";
+            fileStateResult.Text = "Not saved";
+            Program.launcher.Hide();
         }
 
         private void saveButton_Click(object sender, EventArgs e)
@@ -27,8 +27,7 @@ namespace ActivityStorer
             if (descriptionInput.Text.IsEmpty() || coworkerInput.CheckedItems.Count == 0)
             {
                 fileStateResult.ForeColor = Color.Red;
-                fileStateResult.Text = descriptionInput.Text.IsEmpty() ? "Description\nrequired." : "Req. at least\n1 co-worker.";
-                fileStateResult.Show();
+                fileStateResult.Text = descriptionInput.Text.IsEmpty() ? "The description is required." : "At least 1 worker is required.";
                 return;
             }
             var date = dateInput.Value;
@@ -36,21 +35,16 @@ namespace ActivityStorer
             table.AddColumn("Activity start", "Activity end", "Description", "Co-workers", "Ticket", "Branch", "Commit");
             table.AddData("Activity start", activityStartInput.Value.ToString("HH:mm"));
             table.AddData("Activity end", activityEndInput.Value.ToString("HH:mm"));
-            table.AddData("Description", descriptionInput.Text.Replace(Environment.NewLine, "<newLine>"));
+            table.AddData("Description", descriptionInput.Text.Replace(Environment.NewLine, "§NEW_LINE_BREAK§"));
             table.AddData("Co-workers", string.Join("|", coworkerInput.CheckedItems.OfType<string>().ToList()));
-            table.AddData("Ticket", ticketInput.Text.Remove("Ticket"));
+            table.AddData("Ticket", ticketInput.Text.Remove("Ticket", "ticket", "_"));
             table.AddData("Branch", branchInput.Text);
             table.AddData("Commit", commitInput.Text);
 
-            var path = AppDomain.CurrentDomain.BaseDirectory;
-            var fullFileName = Path.Combine(path, "Activity " + ActivityStorer.GetVersionAsString(), date.ToString("yyyy"), date.ToString("MM"));
+            var path = Path.Combine(Program.ActivityStorage, $"{date:yyyy\\\\MM}");
+            var fullFileName = Path.Combine(path, $"{date:yyyy-MM-dd}.csv");
 
-            if (!Directory.Exists(fullFileName))
-            {
-                Directory.CreateDirectory(fullFileName);
-            }
-
-            fullFileName = Path.Combine(fullFileName, date.ToString("yyyy-MM-dd") + ".csv");
+            DirectoryHelper.Exist(fullFileName, true);
 
             var csvContent = table.TableToCsv();
 
@@ -74,8 +68,7 @@ namespace ActivityStorer
                 coworkerInput.SetItemChecked(i, false);
             }
             fileStateResult.ForeColor = Color.Green;
-            fileStateResult.Text = "Saved";
-            fileStateResult.Show();
+            fileStateResult.Text = "File saved!";
         }
     }
 }
