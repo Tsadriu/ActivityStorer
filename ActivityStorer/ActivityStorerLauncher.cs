@@ -6,8 +6,6 @@ namespace ActivityStorer
     public partial class ActivityStorerLauncher : Form
     {
         public static ActivityStorerLauncher Instance;
-        private static VersionEnum currentVersion = VersionEnum.V1_0_0;
-        private static string fileDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
         public ActivityStorerLauncher()
         {
@@ -18,7 +16,7 @@ namespace ActivityStorer
 
         public static string GetVersionAsString()
         {
-            return currentVersion.ToString().Remove("V").Replace("_", ".");
+            return Program.GetVersionAsString().Remove("Version ");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -31,6 +29,12 @@ namespace ActivityStorer
         {
             var viewActivity = new ViewActivityForm();
             viewActivity.Show();
+        }
+
+        private void workersButton_Click(object sender, EventArgs e)
+        {
+            var workerList = new WorkerListForm();
+            workerList.Show();
         }
     }
 }

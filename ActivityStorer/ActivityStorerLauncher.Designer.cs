@@ -31,6 +31,7 @@
         {
             this.saveButton = new System.Windows.Forms.Button();
             this.viewActivityButton = new System.Windows.Forms.Button();
+            this.workersButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // saveButton
@@ -53,14 +54,25 @@
             this.viewActivityButton.UseVisualStyleBackColor = true;
             this.viewActivityButton.Click += new System.EventHandler(this.viewActivityButton_Click);
             // 
-            // ActivityStorer
+            // workersButton
+            // 
+            this.workersButton.Location = new System.Drawing.Point(330, 113);
+            this.workersButton.Name = "workersButton";
+            this.workersButton.Size = new System.Drawing.Size(110, 23);
+            this.workersButton.TabIndex = 2;
+            this.workersButton.Text = "Workers List";
+            this.workersButton.UseVisualStyleBackColor = true;
+            this.workersButton.Click += new System.EventHandler(this.workersButton_Click);
+            // 
+            // ActivityStorerLauncher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.workersButton);
             this.Controls.Add(this.viewActivityButton);
             this.Controls.Add(this.saveButton);
-            this.Name = "ActivityStorer";
+            this.Name = "ActivityStorerLauncher";
             this.Text = "Activity Storer 1.0.0";
             this.ResumeLayout(false);
 
@@ -70,5 +82,6 @@
 
         private Button saveButton;
         private Button viewActivityButton;
+        private Button workersButton;
     }
 }

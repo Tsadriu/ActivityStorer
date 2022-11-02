@@ -31,6 +31,7 @@ namespace ActivityStorer
 
         private void dateInput_DateChanged(object sender, DateRangeEventArgs e)
         {
+            currentFileContent.Clear();
             DateTime selectedDate = dateInput.SelectionRange.Start;
             string fullFileName = Path.Combine(Program.ActivityStorage, $"{selectedDate:yyyy\\\\MM}", $"{selectedDate:yyyy-MM-dd}.csv");
 
@@ -38,6 +39,7 @@ namespace ActivityStorer
             {
                 ResetParameters();
                 rowInput.Enabled = false;
+                rowInput.Value = 0;
                 modifyButton.Enabled = false;
                 return;
             }
@@ -48,14 +50,15 @@ namespace ActivityStorer
             table.CsvToTable(fullFileName);
 
             currentFileContent = table.TableToCsv();
-
+            rowInput.Value = 1;
             DisplayInfo(1);
         }
 
         private void rowInput_ValueChanged(object sender, EventArgs e)
         {
             var max = currentFileContent.Count != 0 ? currentFileContent.Count - 1 : 0;
-            rowInput.Value = rowInput.Value.ClampValue(1, max); // -1 for index
+            var min = max == 0 ? 0 : 1;
+            rowInput.Value = rowInput.Value.ClampValue(min, max);
             DisplayInfo((int)rowInput.Value);
         }
 
@@ -110,33 +113,36 @@ namespace ActivityStorer
         /// <param name="row">Row to display.</param>
         private void DisplayInfo(int row)
         {
-            workerInput.Items.Clear();
-
-            var currentLine = currentFileContent[row].Split(";");
-            activityStartInput.Value = currentLine[0].ToDateTime("HH:mm");
-            activityEndInput.Value = currentLine[1].ToDateTime("HH:mm");
-            descriptionInput.Text = currentLine[2].Replace(Program.LineBreak, Environment.NewLine);
-            List<string> workersInFile;
-
-            if (currentLine[3].IsEmpty())
+            if (currentFileContent.Count != 0)
             {
-                workersInFile = new List<string>();
-            }
-            else
-            {
-                workersInFile = currentLine[3].Split("|").ToList();
-            }
+                workerInput.Items.Clear();
 
-            for (int i = 0; i < workersInFile.Count; i++)
-            {
-                string? worker = workersInFile[i];
-                workerInput.Items.Add(worker);
-                workerInput.SetItemChecked(i, true);
-            }
+                var currentLine = currentFileContent[row].Split(";");
+                activityStartInput.Value = currentLine[0].ToDateTime("HH:mm");
+                activityEndInput.Value = currentLine[1].ToDateTime("HH:mm");
+                descriptionInput.Text = currentLine[2].Replace(Program.LineBreak, Environment.NewLine);
+                List<string> workersInFile;
 
-            ticketInput.Text = currentLine[4];
-            branchInput.Text = currentLine[5];
-            commitInput.Text = currentLine[6];
+                if (currentLine[3].IsEmpty())
+                {
+                    workersInFile = new List<string>();
+                }
+                else
+                {
+                    workersInFile = currentLine[3].Split("|").ToList();
+                }
+
+                for (int i = 0; i < workersInFile.Count; i++)
+                {
+                    string? worker = workersInFile[i];
+                    workerInput.Items.Add(worker);
+                    workerInput.SetItemChecked(i, true);
+                }
+
+                ticketInput.Text = currentLine[4];
+                branchInput.Text = currentLine[5];
+                commitInput.Text = currentLine[6];
+            }
         }
 
         private void modifyButton_Click(object sender, EventArgs e)
@@ -175,7 +181,15 @@ namespace ActivityStorer
             var listOfWorkers = workerInput.CheckedItems.OfType<string>().ToList();
             var listOfWorkersToAdd = workerToAddBox.Text.Split(Environment.NewLine).ToList();
 
-            string userWorkers = string.Join("|", workerInput.CheckedItems.OfType<string>().ToList());
+            foreach (var workerToAdd in listOfWorkersToAdd)
+            {
+                if (!listOfWorkers.Contains(workerToAdd))
+                {
+                    listOfWorkers.Add(workerToAdd);
+                }
+            }
+
+            string userWorkers = string.Join("|", listOfWorkers);
             string userTicket = ticketInput.Text;
             string userBranch = branchInput.Text;
             string userCommit = commitInput.Text;

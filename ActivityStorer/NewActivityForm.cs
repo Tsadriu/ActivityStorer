@@ -13,12 +13,20 @@ namespace ActivityStorer
 {
     public partial class NewActivityForm : Form
     {
+        private List<string> workerList;
+
         public NewActivityForm()
         {
             InitializeComponent();
             CenterToParent();
             Text = "Activity Storer " + ActivityStorerLauncher.GetVersionAsString() + " - Register new acvitity";
             fileStateResult.Text = "Not saved";
+            activityStartInput.Value = DateTime.Now.AddHours(-1);
+            activityEndInput.Value = DateTime.Now;
+            dateInput.MaxDate = DateTime.Today;
+            dateInput.Value = DateTime.Today;
+            workerList = Program.GetWorkers();
+            LoadWorkers();
             Program.launcher.Hide();
         }
 
@@ -35,7 +43,7 @@ namespace ActivityStorer
             table.AddColumn("Activity start", "Activity end", "Description", "Co-workers", "Ticket", "Branch", "Commit");
             table.AddData("Activity start", activityStartInput.Value.ToString("HH:mm"));
             table.AddData("Activity end", activityEndInput.Value.ToString("HH:mm"));
-            table.AddData("Description", descriptionInput.Text.Replace(Environment.NewLine, "§NEW_LINE_BREAK§"));
+            table.AddData("Description", descriptionInput.Text.Replace(Environment.NewLine, Program.LineBreak));
             table.AddData("Co-workers", string.Join("|", coworkerInput.CheckedItems.OfType<string>().ToList()));
             table.AddData("Ticket", ticketInput.Text.Remove("Ticket", "ticket", "_"));
             table.AddData("Branch", branchInput.Text);
@@ -69,6 +77,16 @@ namespace ActivityStorer
             }
             fileStateResult.ForeColor = Color.Green;
             fileStateResult.Text = "File saved!";
+        }
+
+        private void LoadWorkers()
+        {
+            coworkerInput.Items.Clear();
+
+            foreach(var worker in workerList)
+            {
+                coworkerInput.Items.Add(worker);
+            }
         }
     }
 }

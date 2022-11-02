@@ -25,6 +25,7 @@ namespace ActivityStorer
             launcher.StartPosition = FormStartPosition.CenterScreen;
             Application.Run(launcher);
             CheckOrCreateReadMe();
+            CheckWorkerListSettings();
         }
 
         /// <summary>
@@ -42,15 +43,18 @@ namespace ActivityStorer
         /// <returns></returns>
         public static List<string> GetWorkers()
         {
-            var path = Path.Combine(SettingsStorage, "settings.csv");
+            var path = Path.Combine(SettingsStorage, "workerList.csv");
+            TTable table = new TTable();
+            table.CsvToTable(path);
 
-            if (File.Exists(path))
+            var workers = new List<string>();
+
+            foreach (var worker in table.GetData("Worker"))
             {
-                string workers = File.ReadAllText(path);
+                workers.Add((string)worker);
             }
 
-            File.Create(path).Close();
-            return new List<string>();
+            return workers;
         }
 
         private static void CheckOrCreateReadMe()
@@ -65,6 +69,22 @@ namespace ActivityStorer
             string readMeContent = "This folder contains the data of the activities and the workers of a company. Deleting this folder will delete all saved data.";
 
             File.WriteAllText(path, readMeContent);
+        }
+
+        private static void CheckWorkerListSettings()
+        {
+            var fullFilePath = Path.Combine(SettingsStorage, "workerList.csv");
+
+            if (!File.Exists(fullFilePath))
+            {
+                Directory.CreateDirectory(SettingsStorage);
+                var file = File.Create(fullFilePath);
+                file.Close();
+                var table = new TTable();
+                table.AddColumn("Worker");
+                var tableContent = table.TableToCsv();
+                File.WriteAllLines(fullFilePath, tableContent);
+            }
         }
     }
 }
