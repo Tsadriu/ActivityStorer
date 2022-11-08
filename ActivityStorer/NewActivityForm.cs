@@ -19,7 +19,7 @@ namespace ActivityStorer
         {
             InitializeComponent();
             CenterToParent();
-            Text = "Activity Storer " + ActivityStorerLauncher.GetVersionAsString() + " - Register new acvitity";
+            Text = "Activity Storer " + ActivityStorerLauncher.GetVersionAsString() + " - Register new activity";
             fileStateResult.Text = "Not saved";
             activityStartInput.Value = DateTime.Now.AddHours(-1);
             activityEndInput.Value = DateTime.Now;

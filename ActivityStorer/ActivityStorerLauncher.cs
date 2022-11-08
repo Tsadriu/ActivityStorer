@@ -14,6 +14,10 @@ namespace ActivityStorer
             Text = $"Activity Storer {GetVersionAsString()}";
         }
 
+        /// <summary>
+        /// Returns the current program version.
+        /// </summary>
+        /// <returns>The current program version as "1.0.0" for example.</returns>
         public static string GetVersionAsString()
         {
             return Program.GetVersionAsString().Remove("Version ");

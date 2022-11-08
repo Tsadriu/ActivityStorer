@@ -120,6 +120,8 @@ namespace ActivityStorer
                 var currentLine = currentFileContent[row].Split(";");
                 activityStartInput.Value = currentLine[0].ToDateTime("HH:mm");
                 activityEndInput.Value = currentLine[1].ToDateTime("HH:mm");
+                activityDurationTextBox.Text = GetTotalTimePerTask(activityStartInput.Value, activityEndInput.Value).ToString();
+                totalTimeSpentTextBox.Text = GetTotalTimePerDay().ToString();
                 descriptionInput.Text = currentLine[2].Replace(Program.LineBreak, Environment.NewLine);
                 List<string> workersInFile;
 
@@ -160,7 +162,12 @@ namespace ActivityStorer
             workerToAddLabel.Visible = !workerToAddLabel.Visible;
             workerToAddBox.Visible = !workerToAddBox.Visible;
 
-            if (!activityStartInput.Enabled)
+            if (activityStartInput.Enabled)
+            {
+                activityDurationTextBox.Text = string.Empty;
+                totalTimeSpentTextBox.Text = string.Empty;
+            }
+            else
             {
                 DisplayInfo((int)rowInput.Value);
             }
@@ -178,8 +185,8 @@ namespace ActivityStorer
             string userStart = activityStartInput.Value.ToString("HH:mm");
             string userEnd = activityEndInput.Value.ToString("HH:mm");
             string userDescription = descriptionInput.Text.Replace(Environment.NewLine, Program.LineBreak);
-            var listOfWorkers = workerInput.CheckedItems.OfType<string>().ToList();
-            var listOfWorkersToAdd = workerToAddBox.Text.Split(Environment.NewLine).ToList();
+            List<string> listOfWorkers = workerInput.CheckedItems.OfType<string>().ToList();
+            List<string> listOfWorkersToAdd = workerToAddBox.Text.IsNotEmpty() ? workerToAddBox.Text.Split(Environment.NewLine).ToList() : new List<string>();
 
             foreach (var workerToAdd in listOfWorkersToAdd)
             {
@@ -219,6 +226,65 @@ namespace ActivityStorer
             commitInput.Text = string.Empty;
             modifyButton.Text = "Modify";
             saveButton.Enabled = false;
+            activityDurationTextBox.Text = string.Empty;
+            totalTimeSpentTextBox.Text = string.Empty;
+        }
+
+        /// <summary>
+        /// Calculates the time spent on a task (Only increments every 15 minutes).
+        /// </summary>
+        /// <param name="activityStart">The start of the activity.</param>
+        /// <param name="activityEnd">The end of the activity.</param>
+        /// <returns>The total time spent on a task.</returns>
+        private double GetTotalTimePerTask(DateTime activityStart, DateTime activityEnd)
+        {
+            TimeSpan difference = activityEnd - activityStart;
+
+            var tickerHours = difference.Hours;
+            var ticketMinutes = 0;
+
+            if (difference.Minutes < 7)
+            {
+                ticketMinutes = 0;
+            }
+            else if (difference.Minutes >= 7 && difference.Minutes < 22)
+            {
+                ticketMinutes = 15;
+            }
+            else if (difference.Minutes >= 22 && difference.Minutes < 37)
+            {
+                ticketMinutes = 30;
+            }
+            else if (difference.Minutes >= 37 && difference.Minutes < 52)
+            {
+                ticketMinutes = 45;
+            }
+            else if (difference.Minutes >= 52)
+            {
+                ticketMinutes = 0;
+                tickerHours++;
+            }
+
+            return tickerHours + (ticketMinutes / 60d);
+        }
+
+        private double GetTotalTimePerDay()
+        {
+            if (currentFileContent.Count != 0)
+            {
+                double totalTime = 0.0d;
+
+                foreach (var currentRow in currentFileContent)
+                {
+                    var rowContent = currentRow.Split(";");
+
+                    totalTime += GetTotalTimePerTask(rowContent[0].ToDateTime("HH:mm"), rowContent[1].ToDateTime("HH:mm"));
+                }
+
+                return totalTime;
+            }
+
+            return 0.0d;
         }
     }
 }

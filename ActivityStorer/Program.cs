@@ -10,9 +10,8 @@ namespace ActivityStorer
         public static readonly string ActivityStorage = Path.Combine(ProgramStorage, "Activity");
         public static readonly string SettingsStorage = Path.Combine(ProgramStorage, "Settings");
         public static readonly string LineBreak = "§NEW_LINE_BREAK§";
+        private static VersionEnum currentVersion = VersionEnum.V1_1_0;
         public static ActivityStorerLauncher launcher = new ActivityStorerLauncher();
-
-        private static VersionEnum currentVersion = VersionEnum.V1_0_0;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -23,9 +22,10 @@ namespace ActivityStorer
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             launcher.StartPosition = FormStartPosition.CenterScreen;
-            Application.Run(launcher);
+            CreateDefaultFolders();
             CheckOrCreateReadMe();
             CheckWorkerListSettings();
+            Application.Run(launcher);
         }
 
         /// <summary>
@@ -55,6 +55,13 @@ namespace ActivityStorer
             }
 
             return workers;
+        }
+
+        private static void CreateDefaultFolders()
+        {
+            Directory.CreateDirectory(ProgramStorage);
+            Directory.CreateDirectory(ActivityStorage);
+            Directory.CreateDirectory(SettingsStorage);
         }
 
         private static void CheckOrCreateReadMe()

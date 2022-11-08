@@ -73,7 +73,6 @@
             this.Controls.Add(this.viewActivityButton);
             this.Controls.Add(this.saveButton);
             this.Name = "ActivityStorerLauncher";
-            this.Text = "Activity Storer 1.0.0";
             this.ResumeLayout(false);
 
         }

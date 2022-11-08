@@ -32,6 +32,10 @@
             this.dateInput = new System.Windows.Forms.MonthCalendar();
             this.dateLabel = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.activityDurationTextBox = new System.Windows.Forms.TextBox();
+            this.activityDurationLabel = new System.Windows.Forms.Label();
+            this.workerToAddLabel = new System.Windows.Forms.Label();
+            this.workerToAddBox = new System.Windows.Forms.TextBox();
             this.saveButton = new System.Windows.Forms.Button();
             this.rowLabel = new System.Windows.Forms.Label();
             this.rowInput = new System.Windows.Forms.NumericUpDown();
@@ -52,8 +56,8 @@
             this.activityEndLabel = new System.Windows.Forms.Label();
             this.activityStartInput = new System.Windows.Forms.DateTimePicker();
             this.activityStartLabel = new System.Windows.Forms.Label();
-            this.workerToAddBox = new System.Windows.Forms.TextBox();
-            this.workerToAddLabel = new System.Windows.Forms.Label();
+            this.totalTimeSpentLabel = new System.Windows.Forms.Label();
+            this.totalTimeSpentTextBox = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rowInput)).BeginInit();
             this.SuspendLayout();
@@ -81,6 +85,10 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.totalTimeSpentTextBox);
+            this.panel1.Controls.Add(this.totalTimeSpentLabel);
+            this.panel1.Controls.Add(this.activityDurationTextBox);
+            this.panel1.Controls.Add(this.activityDurationLabel);
             this.panel1.Controls.Add(this.workerToAddLabel);
             this.panel1.Controls.Add(this.workerToAddBox);
             this.panel1.Controls.Add(this.saveButton);
@@ -109,6 +117,45 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(871, 426);
             this.panel1.TabIndex = 2;
+            // 
+            // activityDurationTextBox
+            // 
+            this.activityDurationTextBox.Location = new System.Drawing.Point(394, 143);
+            this.activityDurationTextBox.Name = "activityDurationTextBox";
+            this.activityDurationTextBox.ReadOnly = true;
+            this.activityDurationTextBox.Size = new System.Drawing.Size(92, 23);
+            this.activityDurationTextBox.TabIndex = 42;
+            // 
+            // activityDurationLabel
+            // 
+            this.activityDurationLabel.AutoSize = true;
+            this.activityDurationLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.activityDurationLabel.Location = new System.Drawing.Point(394, 125);
+            this.activityDurationLabel.Name = "activityDurationLabel";
+            this.activityDurationLabel.Size = new System.Drawing.Size(102, 15);
+            this.activityDurationLabel.TabIndex = 41;
+            this.activityDurationLabel.Text = "Activity Duration";
+            // 
+            // workerToAddLabel
+            // 
+            this.workerToAddLabel.AutoSize = true;
+            this.workerToAddLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.workerToAddLabel.Location = new System.Drawing.Point(726, 191);
+            this.workerToAddLabel.Name = "workerToAddLabel";
+            this.workerToAddLabel.Size = new System.Drawing.Size(96, 15);
+            this.workerToAddLabel.TabIndex = 40;
+            this.workerToAddLabel.Text = "Workers to add:";
+            this.workerToAddLabel.Visible = false;
+            // 
+            // workerToAddBox
+            // 
+            this.workerToAddBox.Location = new System.Drawing.Point(726, 209);
+            this.workerToAddBox.Multiline = true;
+            this.workerToAddBox.Name = "workerToAddBox";
+            this.workerToAddBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.workerToAddBox.Size = new System.Drawing.Size(128, 148);
+            this.workerToAddBox.TabIndex = 39;
+            this.workerToAddBox.Visible = false;
             // 
             // saveButton
             // 
@@ -316,26 +363,23 @@
             this.activityStartLabel.TabIndex = 20;
             this.activityStartLabel.Text = "Activity Start";
             // 
-            // workerToAddBox
+            // totalTimeSpentLabel
             // 
-            this.workerToAddBox.Location = new System.Drawing.Point(726, 209);
-            this.workerToAddBox.Multiline = true;
-            this.workerToAddBox.Name = "workerToAddBox";
-            this.workerToAddBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.workerToAddBox.Size = new System.Drawing.Size(128, 148);
-            this.workerToAddBox.TabIndex = 39;
-            this.workerToAddBox.Visible = false;
+            this.totalTimeSpentLabel.AutoSize = true;
+            this.totalTimeSpentLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.totalTimeSpentLabel.Location = new System.Drawing.Point(3, 217);
+            this.totalTimeSpentLabel.Name = "totalTimeSpentLabel";
+            this.totalTimeSpentLabel.Size = new System.Drawing.Size(97, 15);
+            this.totalTimeSpentLabel.TabIndex = 43;
+            this.totalTimeSpentLabel.Text = "Total time spent";
             // 
-            // workerToAddLabel
+            // totalTimeSpentTextBox
             // 
-            this.workerToAddLabel.AutoSize = true;
-            this.workerToAddLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.workerToAddLabel.Location = new System.Drawing.Point(726, 191);
-            this.workerToAddLabel.Name = "workerToAddLabel";
-            this.workerToAddLabel.Size = new System.Drawing.Size(96, 15);
-            this.workerToAddLabel.TabIndex = 40;
-            this.workerToAddLabel.Text = "Workers to add:";
-            this.workerToAddLabel.Visible = false;
+            this.totalTimeSpentTextBox.Location = new System.Drawing.Point(3, 235);
+            this.totalTimeSpentTextBox.Name = "totalTimeSpentTextBox";
+            this.totalTimeSpentTextBox.ReadOnly = true;
+            this.totalTimeSpentTextBox.Size = new System.Drawing.Size(100, 23);
+            this.totalTimeSpentTextBox.TabIndex = 44;
             // 
             // ViewActivityForm
             // 
@@ -379,5 +423,9 @@
         private Button saveButton;
         private TextBox workerToAddBox;
         private Label workerToAddLabel;
+        private TextBox activityDurationTextBox;
+        private Label activityDurationLabel;
+        private TextBox totalTimeSpentTextBox;
+        private Label totalTimeSpentLabel;
     }
 }
