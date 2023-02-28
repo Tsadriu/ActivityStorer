@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TsadriuUtilities;
+using TsadriuUtilities.Csv.CsvObjects;
+using TsadriuUtilities.Csv.CsvObjects.Enums;
 
 namespace ActivityStorer
 {
@@ -15,6 +17,7 @@ namespace ActivityStorer
     {
         private List<string> fileList;
         private List<string> currentFileContent;
+        private bool _isOrderingActivityTime;
 
         public ViewActivityForm()
         {
@@ -161,6 +164,7 @@ namespace ActivityStorer
             saveButton.Enabled = activityStartInput.Enabled;
             workerToAddLabel.Visible = !workerToAddLabel.Visible;
             workerToAddBox.Visible = !workerToAddBox.Visible;
+            orderByTimeButton.Enabled = !orderByTimeButton.Enabled;
 
             if (activityStartInput.Enabled)
             {
@@ -169,6 +173,17 @@ namespace ActivityStorer
             }
             else
             {
+                if (_isOrderingActivityTime)
+                {
+                    int selectedRow = (int)rowInput.Value;
+                    _isOrderingActivityTime = false;
+                    dateInput_DateChanged(new object(), null);
+                    rowInput.Value = selectedRow;
+                    rowInput_ValueChanged(new object(), EventArgs.Empty);
+                    DisplayInfo(selectedRow);
+                    return;
+                }
+
                 DisplayInfo((int)rowInput.Value);
             }
         }
@@ -285,6 +300,22 @@ namespace ActivityStorer
             }
 
             return 0.0d;
+        }
+
+        private void orderByTimeButton_Click(object sender, EventArgs e)
+        {
+            if (currentFileContent == null || currentFileContent.Count == 0)
+            {
+                return;
+            }
+
+            ICsvTable table = new CsvTable(currentFileContent, ";");
+            table.OrderTable("Activity start", CsvSearchType.Equal);
+            currentFileContent = table.ToList();
+
+            rowInput_ValueChanged(new object(), EventArgs.Empty);
+            modifyButton_Click(new object(), EventArgs.Empty);
+            _isOrderingActivityTime = true;
         }
     }
 }

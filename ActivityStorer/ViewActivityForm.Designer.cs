@@ -32,6 +32,9 @@
             this.dateInput = new System.Windows.Forms.MonthCalendar();
             this.dateLabel = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.orderByTimeButton = new System.Windows.Forms.Button();
+            this.totalTimeSpentTextBox = new System.Windows.Forms.TextBox();
+            this.totalTimeSpentLabel = new System.Windows.Forms.Label();
             this.activityDurationTextBox = new System.Windows.Forms.TextBox();
             this.activityDurationLabel = new System.Windows.Forms.Label();
             this.workerToAddLabel = new System.Windows.Forms.Label();
@@ -56,8 +59,6 @@
             this.activityEndLabel = new System.Windows.Forms.Label();
             this.activityStartInput = new System.Windows.Forms.DateTimePicker();
             this.activityStartLabel = new System.Windows.Forms.Label();
-            this.totalTimeSpentLabel = new System.Windows.Forms.Label();
-            this.totalTimeSpentTextBox = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rowInput)).BeginInit();
             this.SuspendLayout();
@@ -85,6 +86,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.orderByTimeButton);
             this.panel1.Controls.Add(this.totalTimeSpentTextBox);
             this.panel1.Controls.Add(this.totalTimeSpentLabel);
             this.panel1.Controls.Add(this.activityDurationTextBox);
@@ -118,13 +120,41 @@
             this.panel1.Size = new System.Drawing.Size(871, 426);
             this.panel1.TabIndex = 2;
             // 
+            // orderByTimeButton
+            // 
+            this.orderByTimeButton.Location = new System.Drawing.Point(282, 54);
+            this.orderByTimeButton.Name = "orderByTimeButton";
+            this.orderByTimeButton.Size = new System.Drawing.Size(78, 43);
+            this.orderByTimeButton.TabIndex = 2;
+            this.orderByTimeButton.Text = "Order by time";
+            this.orderByTimeButton.UseVisualStyleBackColor = true;
+            this.orderByTimeButton.Click += new System.EventHandler(this.orderByTimeButton_Click);
+            // 
+            // totalTimeSpentTextBox
+            // 
+            this.totalTimeSpentTextBox.Location = new System.Drawing.Point(3, 235);
+            this.totalTimeSpentTextBox.Name = "totalTimeSpentTextBox";
+            this.totalTimeSpentTextBox.ReadOnly = true;
+            this.totalTimeSpentTextBox.Size = new System.Drawing.Size(100, 23);
+            this.totalTimeSpentTextBox.TabIndex = 44;
+            // 
+            // totalTimeSpentLabel
+            // 
+            this.totalTimeSpentLabel.AutoSize = true;
+            this.totalTimeSpentLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.totalTimeSpentLabel.Location = new System.Drawing.Point(3, 217);
+            this.totalTimeSpentLabel.Name = "totalTimeSpentLabel";
+            this.totalTimeSpentLabel.Size = new System.Drawing.Size(97, 15);
+            this.totalTimeSpentLabel.TabIndex = 43;
+            this.totalTimeSpentLabel.Text = "Total time spent";
+            // 
             // activityDurationTextBox
             // 
             this.activityDurationTextBox.Location = new System.Drawing.Point(394, 143);
             this.activityDurationTextBox.Name = "activityDurationTextBox";
             this.activityDurationTextBox.ReadOnly = true;
             this.activityDurationTextBox.Size = new System.Drawing.Size(92, 23);
-            this.activityDurationTextBox.TabIndex = 42;
+            this.activityDurationTextBox.TabIndex = 5;
             // 
             // activityDurationLabel
             // 
@@ -154,7 +184,7 @@
             this.workerToAddBox.Name = "workerToAddBox";
             this.workerToAddBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.workerToAddBox.Size = new System.Drawing.Size(128, 148);
-            this.workerToAddBox.TabIndex = 39;
+            this.workerToAddBox.TabIndex = 11;
             this.workerToAddBox.Visible = false;
             // 
             // saveButton
@@ -163,7 +193,7 @@
             this.saveButton.Location = new System.Drawing.Point(627, 369);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(93, 23);
-            this.saveButton.TabIndex = 38;
+            this.saveButton.TabIndex = 13;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
@@ -183,7 +213,7 @@
             this.rowInput.Location = new System.Drawing.Point(282, 29);
             this.rowInput.Name = "rowInput";
             this.rowInput.Size = new System.Drawing.Size(78, 23);
-            this.rowInput.TabIndex = 36;
+            this.rowInput.TabIndex = 1;
             this.rowInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.rowInput.Value = new decimal(new int[] {
             1,
@@ -198,7 +228,7 @@
             this.commitInput.Name = "commitInput";
             this.commitInput.ReadOnly = true;
             this.commitInput.Size = new System.Drawing.Size(92, 23);
-            this.commitInput.TabIndex = 7;
+            this.commitInput.TabIndex = 8;
             // 
             // fileStateResult
             // 
@@ -228,7 +258,7 @@
             this.workerInput.Location = new System.Drawing.Point(528, 209);
             this.workerInput.Name = "workerInput";
             this.workerInput.Size = new System.Drawing.Size(192, 148);
-            this.workerInput.TabIndex = 4;
+            this.workerInput.TabIndex = 10;
             // 
             // workerLabel
             // 
@@ -246,7 +276,7 @@
             this.modifyButton.Location = new System.Drawing.Point(528, 369);
             this.modifyButton.Name = "modifyButton";
             this.modifyButton.Size = new System.Drawing.Size(93, 23);
-            this.modifyButton.TabIndex = 8;
+            this.modifyButton.TabIndex = 12;
             this.modifyButton.Text = "Modify";
             this.modifyButton.UseVisualStyleBackColor = true;
             this.modifyButton.Click += new System.EventHandler(this.modifyButton_Click);
@@ -267,7 +297,7 @@
             this.branchInput.Name = "branchInput";
             this.branchInput.ReadOnly = true;
             this.branchInput.Size = new System.Drawing.Size(92, 23);
-            this.branchInput.TabIndex = 6;
+            this.branchInput.TabIndex = 7;
             // 
             // branchLabel
             // 
@@ -285,7 +315,7 @@
             this.ticketInput.Name = "ticketInput";
             this.ticketInput.ReadOnly = true;
             this.ticketInput.Size = new System.Drawing.Size(92, 23);
-            this.ticketInput.TabIndex = 5;
+            this.ticketInput.TabIndex = 6;
             // 
             // ticketLabel
             // 
@@ -305,7 +335,7 @@
             this.descriptionInput.ReadOnly = true;
             this.descriptionInput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.descriptionInput.Size = new System.Drawing.Size(326, 149);
-            this.descriptionInput.TabIndex = 3;
+            this.descriptionInput.TabIndex = 9;
             // 
             // descriptionLabel
             // 
@@ -327,7 +357,7 @@
             this.activityEndInput.Name = "activityEndInput";
             this.activityEndInput.ShowUpDown = true;
             this.activityEndInput.Size = new System.Drawing.Size(92, 23);
-            this.activityEndInput.TabIndex = 2;
+            this.activityEndInput.TabIndex = 4;
             this.activityEndInput.Value = new System.DateTime(2022, 8, 6, 0, 0, 0, 0);
             // 
             // activityEndLabel
@@ -350,7 +380,7 @@
             this.activityStartInput.Name = "activityStartInput";
             this.activityStartInput.ShowUpDown = true;
             this.activityStartInput.Size = new System.Drawing.Size(92, 23);
-            this.activityStartInput.TabIndex = 1;
+            this.activityStartInput.TabIndex = 3;
             this.activityStartInput.Value = new System.DateTime(2022, 8, 6, 0, 0, 0, 0);
             // 
             // activityStartLabel
@@ -362,24 +392,6 @@
             this.activityStartLabel.Size = new System.Drawing.Size(81, 15);
             this.activityStartLabel.TabIndex = 20;
             this.activityStartLabel.Text = "Activity Start";
-            // 
-            // totalTimeSpentLabel
-            // 
-            this.totalTimeSpentLabel.AutoSize = true;
-            this.totalTimeSpentLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.totalTimeSpentLabel.Location = new System.Drawing.Point(3, 217);
-            this.totalTimeSpentLabel.Name = "totalTimeSpentLabel";
-            this.totalTimeSpentLabel.Size = new System.Drawing.Size(97, 15);
-            this.totalTimeSpentLabel.TabIndex = 43;
-            this.totalTimeSpentLabel.Text = "Total time spent";
-            // 
-            // totalTimeSpentTextBox
-            // 
-            this.totalTimeSpentTextBox.Location = new System.Drawing.Point(3, 235);
-            this.totalTimeSpentTextBox.Name = "totalTimeSpentTextBox";
-            this.totalTimeSpentTextBox.ReadOnly = true;
-            this.totalTimeSpentTextBox.Size = new System.Drawing.Size(100, 23);
-            this.totalTimeSpentTextBox.TabIndex = 44;
             // 
             // ViewActivityForm
             // 
@@ -427,5 +439,6 @@
         private Label activityDurationLabel;
         private TextBox totalTimeSpentTextBox;
         private Label totalTimeSpentLabel;
+        private Button orderByTimeButton;
     }
 }

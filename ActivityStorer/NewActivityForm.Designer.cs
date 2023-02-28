@@ -49,11 +49,13 @@
             this.activityStartLabel = new System.Windows.Forms.Label();
             this.dateInput = new System.Windows.Forms.DateTimePicker();
             this.dateLabel = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.commitInput);
             this.panel1.Controls.Add(this.fileStateResult);
             this.panel1.Controls.Add(this.fileStateLabel);
@@ -84,7 +86,7 @@
             this.commitInput.Name = "commitInput";
             this.commitInput.PlaceholderText = "7a4b6ed9bd37d9cd625a5e030645c8a15f75d94a";
             this.commitInput.Size = new System.Drawing.Size(170, 23);
-            this.commitInput.TabIndex = 8;
+            this.commitInput.TabIndex = 6;
             // 
             // fileStateResult
             // 
@@ -121,7 +123,7 @@
             this.coworkerInput.Location = new System.Drawing.Point(215, 37);
             this.coworkerInput.Name = "coworkerInput";
             this.coworkerInput.Size = new System.Drawing.Size(187, 292);
-            this.coworkerInput.TabIndex = 5;
+            this.coworkerInput.TabIndex = 7;
             // 
             // coworkerLabel
             // 
@@ -159,7 +161,7 @@
             this.branchInput.Name = "branchInput";
             this.branchInput.PlaceholderText = "Ticket_367";
             this.branchInput.Size = new System.Drawing.Size(170, 23);
-            this.branchInput.TabIndex = 7;
+            this.branchInput.TabIndex = 5;
             // 
             // branchLabel
             // 
@@ -177,7 +179,7 @@
             this.ticketInput.Name = "ticketInput";
             this.ticketInput.PlaceholderText = "367";
             this.ticketInput.Size = new System.Drawing.Size(92, 23);
-            this.ticketInput.TabIndex = 6;
+            this.ticketInput.TabIndex = 4;
             // 
             // ticketLabel
             // 
@@ -197,7 +199,7 @@
             this.descriptionInput.PlaceholderText = "Aggiornato metodo di Login del portale di Snam.";
             this.descriptionInput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.descriptionInput.Size = new System.Drawing.Size(317, 292);
-            this.descriptionInput.TabIndex = 3;
+            this.descriptionInput.TabIndex = 8;
             // 
             // descriptionLabel
             // 
@@ -274,6 +276,17 @@
             this.dateLabel.TabIndex = 0;
             this.dateLabel.Text = "Date";
             // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button1.Location = new System.Drawing.Point(116, 150);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(93, 23);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "Set now";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // NewActivityForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -310,5 +323,6 @@
         private Label coworkerLabel;
         private Label fileStateResult;
         private Label fileStateLabel;
+        private Button button1;
     }
 }

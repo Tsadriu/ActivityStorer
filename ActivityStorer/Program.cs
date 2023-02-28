@@ -1,5 +1,7 @@
 using ActivityStorer.Enums;
 using TsadriuUtilities;
+using TsadriuUtilities.Csv.CsvObjects;
+using TsadriuUtilities.Csv.CsvObjects.Enums;
 
 namespace ActivityStorer
 {
@@ -10,7 +12,7 @@ namespace ActivityStorer
         public static readonly string ActivityStorage = Path.Combine(ProgramStorage, "Activity");
         public static readonly string SettingsStorage = Path.Combine(ProgramStorage, "Settings");
         public static readonly string LineBreak = "§NEW_LINE_BREAK§";
-        private static VersionEnum currentVersion = VersionEnum.V1_1_0;
+        private static VersionEnum currentVersion = VersionEnum.V1_2_0;
         public static ActivityStorerLauncher launcher = new ActivityStorerLauncher();
         /// <summary>
         /// The main entry point for the application.
@@ -23,7 +25,7 @@ namespace ActivityStorer
             ApplicationConfiguration.Initialize();
             launcher.StartPosition = FormStartPosition.CenterScreen;
             CreateDefaultFolders();
-            CheckOrCreateReadMe();
+            CheckReadMeFile(true);
             CheckWorkerListSettings();
             Application.Run(launcher);
         }
@@ -43,18 +45,9 @@ namespace ActivityStorer
         /// <returns></returns>
         public static List<string> GetWorkers()
         {
-            var path = Path.Combine(SettingsStorage, "workerList.csv");
-            TTable table = new TTable();
-            table.CsvToTable(path);
-
-            var workers = new List<string>();
-
-            foreach (var worker in table.GetData("Worker"))
-            {
-                workers.Add((string)worker);
-            }
-
-            return workers;
+            string path = Path.Combine(SettingsStorage, "workerList.csv");
+            ICsvTable newTable = new CsvTable(File.ReadAllLines(path), ";");
+            return newTable["Worker"].RowList;
         }
 
         private static void CreateDefaultFolders()
@@ -64,34 +57,35 @@ namespace ActivityStorer
             Directory.CreateDirectory(SettingsStorage);
         }
 
-        private static void CheckOrCreateReadMe()
+        private static void CheckReadMeFile(bool createIfMissing)
         {
-            var path = Path.Combine(ProgramStorage, "ReadMe.txt");
+            string path = Path.Combine(ProgramStorage, "ReadMe.txt");
 
-            if (File.Exists(path))
+            if (File.Exists(path) || !createIfMissing)
             {
                 return;
             }
 
-            string readMeContent = "This folder contains the data of the activities and the workers of a company. Deleting this folder will delete all saved data.";
+            const string readMeContent = "This folder contains the data of the activities and the workers of a company. Deleting this folder will delete all saved data.";
 
             File.WriteAllText(path, readMeContent);
         }
 
         private static void CheckWorkerListSettings()
         {
-            var fullFilePath = Path.Combine(SettingsStorage, "workerList.csv");
+            string fullFilePath = Path.Combine(SettingsStorage, "workerList.csv");
 
-            if (!File.Exists(fullFilePath))
+            if (File.Exists(fullFilePath))
             {
-                Directory.CreateDirectory(SettingsStorage);
-                var file = File.Create(fullFilePath);
-                file.Close();
-                var table = new TTable();
-                table.AddColumn("Worker");
-                var tableContent = table.TableToCsv();
-                File.WriteAllLines(fullFilePath, tableContent);
+                return;
             }
+
+            Directory.CreateDirectory(SettingsStorage);
+            FileStream file = File.Create(fullFilePath);
+            file.Close();
+
+            ICsvTable table = new CsvTable("Worker");
+            File.WriteAllLines(fullFilePath, table.ToList());
         }
     }
 }

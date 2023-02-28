@@ -8,12 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TsadriuUtilities;
+using TsadriuUtilities.Csv.CsvObjects;
 
 namespace ActivityStorer
 {
     public partial class NewActivityForm : Form
     {
-        private List<string> workerList;
+        private List<string> _workerList;
 
         public NewActivityForm()
         {
@@ -25,7 +26,7 @@ namespace ActivityStorer
             activityEndInput.Value = DateTime.Now;
             dateInput.MaxDate = DateTime.Today;
             dateInput.Value = DateTime.Today;
-            workerList = Program.GetWorkers();
+            _workerList = Program.GetWorkers();
             LoadWorkers();
             Program.launcher.Hide();
         }
@@ -38,35 +39,42 @@ namespace ActivityStorer
                 fileStateResult.Text = descriptionInput.Text.IsEmpty() ? "The description is required." : "At least 1 worker is required.";
                 return;
             }
-            var date = dateInput.Value;
-            var table = new TTable();
-            table.AddColumn("Activity start", "Activity end", "Description", "Co-workers", "Ticket", "Branch", "Commit");
-            table.AddData("Activity start", activityStartInput.Value.ToString("HH:mm"));
-            table.AddData("Activity end", activityEndInput.Value.ToString("HH:mm"));
-            table.AddData("Description", descriptionInput.Text.Replace(Environment.NewLine, Program.LineBreak));
-            table.AddData("Co-workers", string.Join("|", coworkerInput.CheckedItems.OfType<string>().ToList()));
-            table.AddData("Ticket", ticketInput.Text.Remove("Ticket", "ticket", "_"));
-            table.AddData("Branch", branchInput.Text);
-            table.AddData("Commit", commitInput.Text);
 
-            var path = Path.Combine(Program.ActivityStorage, $"{date:yyyy\\\\MM}");
-            var fullFileName = Path.Combine(path, $"{date:yyyy-MM-dd}.csv");
+            ICsvTable table = new CsvTable("Activity start", "Activity end", "Description", "Co-workers", "Ticket", "Branch", "Commit");
+            table["Activity start"].AddRow(activityStartInput.Value.ToString("HH:mm"));
+            table["Activity end"].AddRow(activityEndInput.Value.ToString("HH:mm"));
+            table["Description"].AddRow(descriptionInput.Text.Replace(Environment.NewLine, Program.LineBreak));
+            table["Co-workers"].AddRow(string.Join("|", coworkerInput.CheckedItems.OfType<string>().ToList()));
+            table["Ticket"].AddRow(ticketInput.Text.Remove("Ticket", "ticket", "_"));
+            table["Branch"].AddRow(branchInput.Text);
+            table["Commit"].AddRow(commitInput.Text);
+            DateTime date = dateInput.Value;
+
+            string filePath = Path.Combine(Program.ActivityStorage, $"{date:yyyy\\\\MM}");
+            string fullFileName = Path.Combine(filePath, $"{date:yyyy-MM-dd}.csv");
 
             DirectoryHelper.Exist(fullFileName, true);
 
-            var csvContent = table.TableToCsv();
+            bool fileExists = File.Exists(fullFileName);
 
-            if (File.Exists(fullFileName))
+            List<string> csvTable = table.ToList(!fileExists);
+
+            if (fileExists)
             {
-                csvContent = table.TableToCsv(false);
-                File.AppendAllLines(fullFileName, csvContent);
-            }
-            else
-            {
-                File.Create(fullFileName).Close();
-                File.AppendAllLines(fullFileName, csvContent);
+                File.AppendAllLines(fullFileName, csvTable);
+                return;
             }
 
+            File.Create(fullFileName).Close();
+            File.AppendAllLines(fullFileName, csvTable);
+            ResetInputs();
+            
+            fileStateResult.ForeColor = Color.Green;
+            fileStateResult.Text = "File saved!";
+        }
+
+        private void ResetInputs()
+        {
             descriptionInput.Text = string.Empty;
             ticketInput.Text = string.Empty;
             branchInput.Text = string.Empty;
@@ -75,18 +83,21 @@ namespace ActivityStorer
             {
                 coworkerInput.SetItemChecked(i, false);
             }
-            fileStateResult.ForeColor = Color.Green;
-            fileStateResult.Text = "File saved!";
         }
 
         private void LoadWorkers()
         {
             coworkerInput.Items.Clear();
 
-            foreach(var worker in workerList)
+            foreach (var worker in _workerList)
             {
                 coworkerInput.Items.Add(worker);
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            activityEndInput.Value = DateTime.Now;
         }
     }
 }
